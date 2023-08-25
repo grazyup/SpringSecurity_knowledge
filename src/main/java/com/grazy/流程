@@ -1,0 +1,17 @@
+
+
+1. 重写登录接口，不使用springSecurity默认的登录接口，在配置类中设置开放登录接口无条件请求访问
+2. 接口中的loginService要获取AuthenticationManager对象，再调用其authenticate方法进行认证
+3. 在认证的过程中，会按照流程图执行，最后调用重写的UserDetailsService实现类的loadUserByUsername()方法查询数据库中的用户信息  （该过程是自己会调用）
+4. 查询到用户，最后封装到UserDetail对象(当前为LoginUser类)并返回
+5. authenticate()将UserDetail封装成一个Authentication对象返回
+6. 如果对象存在证明认证成功，登陆
+7. 设置请求过滤器，解析token成功后将用户信息存入SecurityContextHolder中，为后面的其他的过滤器或资源从中获取当前请求的用户信息
+8. 将自定义的过滤器设置到springSecurity内部的过滤器前面
+
+
+
+
+PS: 自定义的token检验过滤器在登录请求时也会进行过滤检查，之前在配置类配置的登录接口无条件请求访问是配置在框架自带的过滤器链中起作用，登录过程中
+    因为未存在token，会执行放行的操作，如此就会进入到框架内部的过滤器链中，这样无条件访问的设置就起作用了； 对于其他请求，其未带token，在自定义
+    的token检查过滤器中也会被放行，但是在框架的过滤器链中还是会被检测出来，被拦截，请求失败；
