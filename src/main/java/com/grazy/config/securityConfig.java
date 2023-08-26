@@ -1,6 +1,7 @@
 package com.grazy.config;
 
 import com.grazy.filter.JwtAuthenticationTokenFilter;
+import com.grazy.handler.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -32,6 +35,12 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -48,6 +57,13 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
         //将自定义的token校验过滤器添加到springSecurity内部的过滤器链的某个过滤器之前
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        //将框架中异常处理的实现类（自定义）配置到springSecurity中
+        http.exceptionHandling()
+                //认证失败处理器
+                .authenticationEntryPoint(authenticationEntryPoint)
+                //授权失败处理器
+                .accessDeniedHandler(accessDeniedHandler);
     }
 
     @Bean
