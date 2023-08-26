@@ -9,5 +9,7 @@ spring:
     host: localhost
     port: 6379
 
-  mybatis-plus:
+mybatis-plus:
     mapper-locations: classpath*:/mapper/**/*.xml
+server:
+  port: 8888

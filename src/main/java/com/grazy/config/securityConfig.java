@@ -29,6 +29,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     //创建BCryptPasswordEncoder注入容器 会往  Spring 容器中添加一个名为 passwordEncoder【方法名】 的 Bean，该 Bean 即为方法的返回值
     @Bean
     public PasswordEncoder passwordEncoder(){
+        //密码对比
         return new BCryptPasswordEncoder();
     }
 
@@ -64,6 +65,9 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 //授权失败处理器
                 .accessDeniedHandler(accessDeniedHandler);
+
+        //配置springSecurity允许跨域
+        http.cors();
     }
 
     @Bean
