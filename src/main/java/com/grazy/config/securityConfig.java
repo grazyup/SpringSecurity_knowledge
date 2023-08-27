@@ -19,19 +19,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * @Author: grazy
  * @Date: 2023/8/21 16:26
- * @Description:  该部分的过滤配置只有对Security框架内部的过滤器链才起作用
+ * @Description: 该部分的过滤配置只有对Security框架内部的过滤器链才起作用
  */
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)   //开启权限相关配置
 public class securityConfig extends WebSecurityConfigurerAdapter {
-
-    //创建BCryptPasswordEncoder注入容器 会往  Spring 容器中添加一个名为 passwordEncoder【方法名】 的 Bean，该 Bean 即为方法的返回值
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        //密码对比
-        return new BCryptPasswordEncoder();
-    }
 
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
@@ -41,6 +34,15 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
+
+
+    //创建BCryptPasswordEncoder注入容器 会往  Spring 容器中添加一个名为 passwordEncoder【方法名】 的 Bean，该 Bean 即为方法的返回值
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        //密码对比
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
