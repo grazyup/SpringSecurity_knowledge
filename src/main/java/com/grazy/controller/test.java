@@ -1,5 +1,6 @@
 package com.grazy.controller;
 
+import com.grazy.domain.ResponseResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,4 +19,17 @@ public class test {
     public String hello(){
         return "hello";
     }
+
+
+    @PostMapping("/test")
+    @PreAuthorize("@ex.hasAuthority('system:dept:list')")   //调用自定义的权限校验方法
+    public ResponseResult<String> testOneselfExpressionRoot(){
+        return new ResponseResult<>(200,"测试自定义的权限校验方法");
+    }
+
+    @PostMapping("/testCors")
+    public ResponseResult<String> testCors(){
+        return new ResponseResult<>(200,"success");
+    }
+
 }

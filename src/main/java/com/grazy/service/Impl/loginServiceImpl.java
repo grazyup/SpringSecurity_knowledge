@@ -36,7 +36,12 @@ public class loginServiceImpl implements loginService {
 
         //AuthenticationManager 的 authenticate方法进行认证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);  //之后会按照流程自己调用下面的类的方法，最后调用到重写的UserDetailsServiceImpl的loadUserByUsername()方法，然后开始往回走，封装成一个Authentication对象
+        /*
+            之后会按照流程自己调用下面的类的方法，最后调用到重写的UserDetailsServiceImpl的loadUserByUsername()方法根据用户名查找用户，如果存在该用户，
+            然后开始往回走，中间会调用PasswordEncoder的实现类BCryptPasswordEncoder密码对比器进行密码的比对，认证成功后封装成一个Authentication对象
+         */
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
 
         //如果认证没通过，给出对应的提示
         if(Objects.isNull(authenticate)){

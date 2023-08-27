@@ -60,7 +60,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         //将用户信息存入SecurityContextHolder中（因为每个请求都是一个线程，每次请求都是新的ContextHolder，所以每次请求都要存入authentication对象到ContextHolder中）
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());  //使用三个参数的方法是为了最后一个参数能够设置为已认证状态
+                //使用三个参数的方法是为了最后一个参数能够设置为已认证状态，第三个参数是将用户的权限信息封装到Authentication中
+                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         //成功解析token并放行
